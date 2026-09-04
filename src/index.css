@@ -142,6 +142,15 @@ body {
   border-radius: 3px;
 }
 
+/* One exception. The Ask field takes focus the instant the panel opens, so a
+   ring there marks the one element whose focus was never in doubt — it reads as
+   an error state. The caret is the affordance, as in every command palette.
+   Written here rather than as a utility class because this rule is unlayered
+   and would otherwise outrank anything Tailwind emits into @layer utilities. */
+.ask-field:focus-visible {
+  outline: none;
+}
+
 ::selection {
   background: var(--accent-soft);
   color: var(--text);
@@ -256,13 +265,14 @@ body {
   }
 }
 
-/* Ask dialog entrance. Short and small-travel: this opens on a keystroke, so
-   anything longer than ~150ms reads as lag rather than polish. Neutralised by
-   the reduced-motion block below. */
+/* Ask panel entrance. Short and small-travel: this opens on a keystroke, so
+   anything longer than ~150ms reads as lag rather than polish. It rises from
+   its bottom-right anchor so the motion points back at the button that opened
+   it. Neutralised by the reduced-motion block below. */
 @keyframes ask-in {
   from {
     opacity: 0;
-    transform: translateY(-6px) scale(0.985);
+    transform: translateY(8px) scale(0.985);
   }
   to {
     opacity: 1;
@@ -272,6 +282,7 @@ body {
 
 .ask-in {
   animation: ask-in 140ms var(--ease) both;
+  transform-origin: bottom right;
 }
 
 @media (prefers-reduced-motion: reduce) {

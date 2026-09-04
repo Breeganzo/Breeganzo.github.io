@@ -91,8 +91,6 @@ function Nav() {
             <NavItems />
           </nav>
 
-          <Ask />
-
           <ThemeToggle />
 
           <button
@@ -128,7 +126,9 @@ function Nav() {
 function Footer() {
   return (
     <footer className="mt-24 border-t border-line">
-      <div className="mx-auto flex max-w-5xl flex-col gap-4 px-5 py-8 sm:flex-row sm:items-center">
+      {/* Extra bottom padding on small screens keeps the floating Ask button
+          clear of the social links, which share the bottom-right corner. */}
+      <div className="mx-auto flex max-w-5xl flex-col gap-4 px-5 pt-8 pb-24 sm:flex-row sm:items-center">
         <p className="text-[13px] text-faint">
           {profile.name} · {profile.location}
         </p>
@@ -179,6 +179,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
       </main>
       <Footer />
+      <Ask />
     </div>
   )
 }
