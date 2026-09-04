@@ -8,16 +8,22 @@ export const profile = {
     github: 'https://github.com/Breeganzo',
     linkedin: 'https://www.linkedin.com/in/breeganzo/',
   },
-  // BLOCKED — intentionally empty so the resume row renders nothing until fixed.
-  //
-  // Both source PDFs still contain the two Elastic ML bullets that are excluded
-  // from this site (the 105M-record per-API-endpoint repartitioning, and the
-  // seven data-quality defects / 28-panel Kibana dashboard). Shipping them as-is
-  // would republish withheld content and contradict the HTML.
-  //
-  // To re-enable: regenerate both PDFs without those bullets, put them in
-  // public/, then restore the two entries below. `npm run audit:content`
-  // fails if a PDF containing the excluded phrases is present.
+  /** Hero portrait. Both formats live in public/; the webp is preferred. */
+  photo: { webp: '/profile.webp', jpg: '/profile.jpg', alt: 'Anthony Breeganzo Thomas' },
+  /** Shown as a pill on the portrait. Set to null to hide it. */
+  availability: 'Open to opportunities',
+  /**
+   * Two tracks, two documents. Both are scanned by `npm run audit:content`,
+   * so a PDF containing an excluded phrase fails the build rather than
+   * quietly contradicting the HTML.
+   *
+   * EMPTY ON PURPOSE. The current PDFs describe the Elastic ML client
+   * engagement, which `audit:content` forbids from anything public. They are
+   * staged (gitignored) at the repo root. To re-enable: re-export both without
+   * those bullets, drop them in `public/`, restore the entries below, and
+   * confirm `npm run audit:content` passes. The hero download row hides itself
+   * while this list is empty.
+   */
   resumes: [] as { label: string; file: string }[],
   /** Hero. Kept short — the projects carry the argument. */
   headline: 'I build production generative-AI systems, and I measure whether they work.',

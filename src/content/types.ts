@@ -41,9 +41,13 @@ export interface Role {
 export interface SkillGroup {
   name: string
   items: string[]
+  /** Surfaced in the Methods section of the quant page. */
+  quant?: boolean
 }
 
 export interface Degree {
+  /** Stable key. Pages look degrees up by this, never by display text. */
+  id: string
   institution: string
   qualification: string
   detail?: string

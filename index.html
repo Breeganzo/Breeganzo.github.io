@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,7 +17,14 @@
       content="Production generative-AI systems: RAG pipeline design, multi-agent orchestration, and retrieval evaluation. Quantitative research alongside."
     />
     <meta property="og:url" content="https://breeganzo.github.io/" />
+    <meta property="og:image" content="https://breeganzo.github.io/profile.jpg" />
+    <meta property="og:image:alt" content="Anthony Breeganzo Thomas" />
     <meta name="twitter:card" content="summary" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/profile.jpg" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f7fc" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#08090c" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,12 +34,35 @@
     />
 
     <script>
-      // Applied before first paint so the theme never flashes.
+      // Applied before first paint so the theme never flashes. A stored
+      // choice wins; otherwise follow the operating system.
       try {
         var stored = localStorage.getItem('theme')
-        var dark = stored ? stored === 'dark' : true
+        var dark =
+          stored === 'dark' || stored === 'light'
+            ? stored === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
         document.documentElement.classList.toggle('dark', dark)
       } catch (e) {}
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Anthony Breeganzo Thomas",
+        "jobTitle": "AI Engineer",
+        "url": "https://breeganzo.github.io/",
+        "image": "https://breeganzo.github.io/profile.jpg",
+        "email": "mailto:anthonybreeganzo02@gmail.com",
+        "worksFor": { "@type": "Organization", "name": "Kyndryl" },
+        "address": { "@type": "PostalAddress", "addressLocality": "Bangalore", "addressCountry": "IN" },
+        "alumniOf": [
+          { "@type": "CollegeOrUniversity", "name": "Queen Mary University of London" },
+          { "@type": "CollegeOrUniversity", "name": "Reva University" }
+        ],
+        "sameAs": ["https://github.com/Breeganzo", "https://www.linkedin.com/in/breeganzo/"]
+      }
     </script>
   </head>
   <body>

@@ -41,12 +41,15 @@ so the gap reads as a decision rather than an omission.
 
 ## Release gates
 
-Both run in CI and fail the deploy.
-
 ```bash
 npm run audit:content   # withheld / confidential content, outdated title, retired domain
 npm run checklinks      # every external URL resolves
 ```
+
+`audit:content` runs in CI and fails the deploy. `checklinks` is deliberately **not**
+in CI yet: three linked repositories are still private, so it fails on 404s that are
+expected rather than wrong. Wire it into `.github/workflows/deploy.yml` once those
+repos are public.
 
 `audit:content` scans `dist/` and any PDF in `public/` (needs `pdftotext`). It has a
 short allowlist for documented false positives — each entry carries a reason, and it
@@ -57,11 +60,28 @@ the signal that a linked repository is still private.
 
 ## Known blockers
 
-- **Resume downloads are disabled.** `profile.resumes` is empty because both source
-  PDFs still contain two bullets that are excluded from this site. Regenerate them
-  without those bullets, put them in `public/`, then restore the two entries.
-  `audit:content` fails if a PDF containing the excluded phrases is present.
+**No resume is published.** `profile.resumes` is an empty array, so the hero's
+download row hides itself. Both PDFs describe the "Elastic ML Observability &
+Anomaly Detection" engagement, which `audit:content` forbids from anything public,
+and `Quant_Resume.pdf` additionally identifies a client as **"India's third-largest
+telecom operator (200M+ subscribers)"** — a superlative plus a scale figure names a
+company as surely as naming it. They are staged, gitignored, at the repo root.
+
+To publish them, re-export both with:
+
+- the whole Elastic ML project removed, including the per-API-endpoint
+  repartitioning across 105M+ records with 91 baselines, and the seven
+  data-quality defects with the 28-panel dashboard;
+- the telecom client described by sector alone — "an Indian telecom operator".
+
+Then drop them in `public/`, restore the two entries in `profile.resumes`, and
+confirm `npm run audit:content` still passes.
+
+Other, non-blocking:
+
 - Three linked repositories are still private, so those links 404 until they are
   made public: `AlphaFlow`, `AWS_LZ_AGENT`, `french-on-the-fly`.
 - `RMD_Agent_Demo`'s live demo link is omitted — the Streamlit app now redirects to
   a login page.
+- `Veloryn` is commented out in `projects.ts`; `veloryn.dev` fails TLS and serves
+  nothing over plain HTTP either.

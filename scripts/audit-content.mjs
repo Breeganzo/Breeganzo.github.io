@@ -43,9 +43,30 @@ const FORBIDDEN = [
   { term: 'parkconnect', why: 'retired domain' },
 ]
 
-/** "A2A" needs word-boundary matching — it collides with nothing useful but is short. */
 const FORBIDDEN_REGEX = [
+  /** "A2A" needs word-boundary matching — short, but collides with nothing useful. */
   { re: /\bA2A\b/i, label: 'A2A', why: 'A2A is unverified' },
+
+  // ── Identifying client descriptors ────────────────────────────────────────
+  // A superlative plus a scale figure identifies a company as surely as naming
+  // it. "India's third-largest telecom operator (200M+ subscribers)" resolves
+  // to exactly one firm; beside the word Kyndryl the anonymisation is gone.
+  // Sector alone is what's permitted — "an Indian telecom operator".
+  {
+    re: /\b(?:first|second|third|fourth|fifth|largest|biggest)[-\s]?(?:largest|biggest)?\s+(?:telecom|telco|bank|insurer|retailer|operator|hospitality)/i,
+    label: 'ranked client descriptor',
+    why: 'superlative + sector identifies the client — use the sector alone',
+  },
+  {
+    re: /\b\d+\s?(?:M|million|K|thousand|bn|billion)\+?\s+subscribers\b/i,
+    label: 'subscriber count',
+    why: 'scale figure narrows the client to one company',
+  },
+  {
+    re: /\bmultinational\s+(?:hospitality|telecom|banking)/i,
+    label: 'multinational + sector',
+    why: 'identifying client descriptor',
+  },
 ]
 
 /**

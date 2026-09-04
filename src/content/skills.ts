@@ -24,6 +24,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     name: 'Quantitative & Statistical Methods',
+    quant: true,
     items: [
       'Time-series modelling and forecasting',
       'Walk-forward cross-validation',
@@ -40,6 +41,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     name: 'Machine Learning',
+    quant: true,
     items: [
       'scikit-learn',
       'LightGBM',

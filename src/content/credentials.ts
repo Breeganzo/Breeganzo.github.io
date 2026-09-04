@@ -2,6 +2,7 @@ import type { Award, Credential, Degree } from './types'
 
 export const degrees: Degree[] = [
   {
+    id: 'wqu-mfe',
     institution: 'WorldQuant University',
     qualification: 'MSc Financial Engineering',
     detail: 'In progress, part-time alongside full-time work',
@@ -11,6 +12,7 @@ export const degrees: Degree[] = [
       'Completed: Financial Markets. In progress: Financial Data. Remaining coursework includes Financial Econometrics, Derivative Pricing, Stochastic Modeling, Machine Learning in Finance, Deep Learning for Finance, and Portfolio Management and Risk Management.',
   },
   {
+    id: 'qmul-msc-ai',
     institution: 'Queen Mary University of London',
     qualification: 'MSc Artificial Intelligence',
     detail: 'Distinction',
@@ -19,6 +21,7 @@ export const degrees: Degree[] = [
     note: 'Fully Funded Commonwealth Masters Scholar',
   },
   {
+    id: 'reva-btech',
     institution: 'Reva University, Bangalore',
     qualification: 'B.Tech Computer Science and Engineering',
     detail: 'CGPA 9.0 / 10',

@@ -1,53 +1,125 @@
 @import 'tailwindcss';
 
-/* Dark-first. One accent colour, no gradients. */
+/* ------------------------------------------------------------------
+   Design system
+   One accent family, two fully-considered themes. Colour lives in CSS
+   custom properties on :root / .dark; `@theme inline` re-exports them
+   so Tailwind utilities resolve to var() and flip with the theme
+   automatically — which is why there is not a single `dark:` variant
+   anywhere in this codebase.
+   ------------------------------------------------------------------ */
+
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 :root {
-  --bg: #ffffff;
-  --bg-subtle: #f7f7f8;
+  /* Surfaces — the page is tinted so raised cards have something to lift off. */
+  --bg: #f4f7fc;
+  --bg-subtle: #e9eff8;
   --bg-raised: #ffffff;
-  --border: #e4e4e7;
-  --border-strong: #d4d4d8;
-  --text: #18181b;
-  --text-muted: #52525b;
-  --text-faint: #8b8b93;
-  --accent: #1d63c9;
-  --accent-soft: #eaf1fd;
+
+  --border: #e0e7f1;
+  --border-strong: #c7d3e4;
+
+  --text: #0f172a;
+  --text-muted: #4b5768;
+  --text-faint: #7b8798;
+
+  --accent: #0b5fd0;
+  --accent-2: #4a90e2;
+  --accent-soft: #e6efff;
+  --on-accent: #ffffff;
+
+  /* Glass */
+  --glass-bg: color-mix(in srgb, #ffffff 70%, transparent);
+  --glass-border: color-mix(in srgb, #0f172a 9%, transparent);
+  --glass-highlight: color-mix(in srgb, #ffffff 85%, transparent);
+  --glass-blur: 18px;
+
+  /* Elevation — blue-tinted in light so shadows read as air, not dirt.
+     Named --elev-* rather than --shadow-* so they cannot clobber the
+     Tailwind theme variables of the same name. */
+  --elev-1: 0 1px 2px rgb(11 42 92 / 0.05), 0 2px 8px rgb(11 42 92 / 0.05);
+  --elev-2: 0 4px 12px rgb(11 42 92 / 0.07), 0 14px 32px rgb(11 42 92 / 0.08);
+  --elev-3: 0 12px 24px rgb(11 42 92 / 0.09), 0 30px 60px rgb(11 42 92 / 0.14);
+
+  --grad-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+
+  /* Ambient background field */
+  --aurora-1: rgb(11 95 208 / 0.16);
+  --aurora-2: rgb(74 144 226 / 0.14);
+  --aurora-3: rgb(99 102 241 / 0.1);
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
-  --bg: #0b0c0e;
-  --bg-subtle: #121316;
-  --bg-raised: #16181c;
-  --border: #26282e;
-  --border-strong: #35383f;
-  --text: #f2f3f5;
-  --text-muted: #a1a4ad;
-  --text-faint: #70737c;
+  --bg: #08090c;
+  --bg-subtle: #0e1016;
+  --bg-raised: #14171f;
+
+  --border: #23262f;
+  --border-strong: #343949;
+
+  --text: #f4f6f9;
+  --text-muted: #a4aaba;
+  --text-faint: #737990;
+
   --accent: #6ea8ff;
-  --accent-soft: #14203a;
+  --accent-2: #8ab4ff;
+  --accent-soft: #10203c;
+  --on-accent: #06121f;
+
+  --glass-bg: color-mix(in srgb, #171b25 62%, transparent);
+  --glass-border: color-mix(in srgb, #ffffff 9%, transparent);
+  --glass-highlight: color-mix(in srgb, #ffffff 7%, transparent);
+  --glass-blur: 20px;
+
+  --elev-1: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.3);
+  --elev-2: 0 4px 12px rgb(0 0 0 / 0.45), 0 14px 32px rgb(0 0 0 / 0.4);
+  --elev-3: 0 12px 24px rgb(0 0 0 / 0.5), 0 30px 60px rgb(0 0 0 / 0.55);
+
+  --aurora-1: rgb(56 118 220 / 0.22);
+  --aurora-2: rgb(110 168 255 / 0.14);
+  --aurora-3: rgb(129 92 240 / 0.14);
+}
+
+/* Re-export runtime tokens as Tailwind utilities. `inline` makes the
+   generated utility emit var(--x) directly, so .dark flips it. */
+@theme inline {
+  --color-canvas: var(--bg);
+  --color-subtle: var(--bg-subtle);
+  --color-raised: var(--bg-raised);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-ink: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+
+  --radius-card: var(--r-lg);
+  --radius-panel: var(--r-xl);
+  --radius-pill: 999px;
+
+  --shadow-soft: var(--elev-1);
+  --shadow-float: var(--elev-2);
+  --shadow-lift: var(--elev-3);
 }
 
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+  /* The sticky glass header would otherwise cover anchored sections. */
+  scroll-padding-top: 5.5rem;
 }
 
 body {
@@ -56,6 +128,11 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Animate only the two properties that carry the theme change. A
+     blanket `transition: all` would drag every hover state to 300ms. */
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
 }
 
 /* Visible focus for keyboard users, suppressed for mouse. */
@@ -78,4 +155,124 @@ body {
 @utility prose-body {
   color: var(--text-muted);
   line-height: 1.75;
+}
+
+@utility glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  box-shadow:
+    var(--elev-1),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+@utility glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  box-shadow:
+    var(--elev-2),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+@utility gradient-text {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Browsers without backdrop-filter get an opaque surface rather than an
+   unreadable translucent one. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-panel {
+    background: var(--bg-raised);
+  }
+}
+
+/* ---------- Motion ---------- */
+
+/* Scroll reveal. useReveal sets data-revealed="true" on intersection. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.6s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal][data-revealed='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Pointer-tracked highlight on cards. --mx/--my are written by
+   useSpotlight. z-index -1 keeps the glare above the card's own
+   background but behind its content; the card sets `isolation: isolate`
+   so the negative index cannot escape the card. */
+.spotlight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+  background: radial-gradient(
+    20rem circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--accent) 13%, transparent),
+    transparent 60%
+  );
+}
+
+.spotlight:hover::after {
+  opacity: 1;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -22px, 0) scale(1.05);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, #22c55e 60%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, #22c55e 0%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  /* Reveal targets must not be stranded invisible when motion is skipped. */
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  .spotlight::after {
+    display: none;
+  }
 }
