@@ -5,6 +5,7 @@ import { featuredProjects, projects } from '../content/projects'
 import { roles } from '../content/experience'
 import { skillGroups } from '../content/skills'
 import { awards, certifications, degrees } from '../content/credentials'
+import { CERTIFICATIONS_ANCHOR, degreeAnchor, roleAnchor, skillAnchor } from '../content/anchors'
 import ProjectCard from '../components/ProjectCard'
 import { Badge, Card, SectionHeading, Stat, Tag, buttonProps } from '../components/ui'
 import { usePageMeta } from '../lib/usePageMeta'
@@ -193,7 +194,12 @@ export default function Home() {
             aria-hidden and the list stays a plain sequence for screen readers. */}
         <div className="space-y-8 border-l border-line pl-6 sm:pl-8">
           {roles.map((role, i) => (
-            <Card key={`${role.company}-${role.start}`} {...reveal(i)} className="p-6">
+            <Card
+              key={`${role.company}-${role.start}`}
+              id={roleAnchor(role.company, role.start)}
+              {...reveal(i)}
+              className="p-6"
+            >
               <span
                 aria-hidden
                 className="absolute top-8 -left-[calc(1.5rem+5px)] size-2.5 rounded-full sm:-left-[calc(2rem+5px)]"
@@ -232,7 +238,7 @@ export default function Home() {
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           {skillGroups.map((g, i) => (
-            <Card key={g.name} {...reveal(i)} className="p-5">
+            <Card key={g.name} id={skillAnchor(g.name)} {...reveal(i)} className="p-5">
               <h3 className="mb-3 text-[13px] font-semibold">{g.name}</h3>
               <div className="flex flex-wrap gap-1.5">
                 {g.items.map((item) => (
@@ -252,7 +258,7 @@ export default function Home() {
 
         <div className="space-y-4">
           {degrees.map((d, i) => (
-            <Card key={d.institution} {...reveal(i)} className="p-6">
+            <Card key={d.institution} id={degreeAnchor(d.id)} {...reveal(i)} className="p-6">
               <div className="flex flex-wrap items-baseline gap-x-3">
                 <h3 className="text-[15px] font-semibold">{d.qualification}</h3>
                 {d.detail && <span className="text-[13px] text-accent">{d.detail}</span>}
@@ -278,7 +284,7 @@ export default function Home() {
               ))}
             </ul>
           </Card>
-          <Card {...reveal(1)} className="p-6">
+          <Card id={CERTIFICATIONS_ANCHOR} {...reveal(1)} className="p-6">
             <h3 className="mb-3 text-[13px] font-semibold">Certifications</h3>
             <ul className="space-y-2">
               {certifications.map((c) => (

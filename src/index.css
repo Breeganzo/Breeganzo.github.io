@@ -135,6 +135,13 @@ body {
     color 0.3s var(--ease);
 }
 
+/* The header is sticky, so an anchor scrolled to `block: start` stops directly
+   underneath it. Reserving the header's height means the thing you navigated to
+   is the first thing you see. */
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
 /* Visible focus for keyboard users, suppressed for mouse. */
 :focus-visible {
   outline: 2px solid var(--accent);

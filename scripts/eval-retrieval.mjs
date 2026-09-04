@@ -14,6 +14,7 @@
  * Run:  npm run eval:retrieval
  */
 import { ask } from '../src/lib/ask/index.ts'
+import { docs } from '../src/lib/ask/corpus.ts'
 
 /** query -> the document a reasonable person expects at or near the top. */
 const GOLDEN = [
@@ -116,4 +117,33 @@ if (recall3 < THRESHOLD) {
   process.exit(1)
 }
 
+/**
+ * Destination check.
+ *
+ * Ranking correctly is only half the job: a result that ranks first and then
+ * lands you on a section heading with twenty other items has not answered
+ * anything. This shipped broken once — every role linked to `/#experience`,
+ * every degree to `/#background` — and the recall numbers were a perfect 100%
+ * throughout, because recall cannot see where a link goes.
+ *
+ * So: two documents may not share a destination.
+ */
+const byHref = new Map()
+for (const doc of docs) {
+  if (!byHref.has(doc.href)) byHref.set(doc.href, [])
+  byHref.get(doc.href).push(doc.id)
+}
+const collisions = [...byHref.entries()].filter(([, ids]) => ids.length > 1)
+
+if (collisions.length > 0) {
+  console.error(`\nFAIL — ${collisions.length} destination(s) shared by more than one result:`)
+  for (const [href, ids] of collisions) {
+    console.error(`  ${href}`)
+    for (const id of ids) console.error(`    ${id}`)
+  }
+  console.error('\nEach result must link to the item itself, not the section containing it.')
+  process.exit(1)
+}
+
+console.log(`  ${docs.length} documents, ${byHref.size} distinct destinations`)
 console.log(`\npass — recall@3 ${pct(recall3)} meets the ${pct(THRESHOLD)} threshold.\n`)

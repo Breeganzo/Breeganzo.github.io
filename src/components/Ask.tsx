@@ -193,20 +193,28 @@ export default function Ask() {
                       type="button"
                       onClick={() => go(r.doc)}
                       onMouseMove={() => setActive(i)}
-                      className={`w-full rounded-card px-2.5 py-2.5 text-left transition-colors ${
+                      className={`w-full rounded-card px-3 py-2.5 text-left transition-colors ${
                         i === active ? 'bg-accent-soft' : ''
                       }`}
                     >
+                      {/* Title first. It is the only line a visitor is
+                          guaranteed to read, so the category label cannot go
+                          above it and push it down the scan path. */}
                       <span className="flex items-baseline gap-2">
-                        <span className="shrink-0 font-mono text-[9.5px] tracking-[0.12em] uppercase text-accent">
-                          {kindLabels[r.doc.kind]}
+                        <span className="truncate text-[14px] leading-snug font-semibold">
+                          {r.doc.title}
                         </span>
-                        <span className="truncate text-[14px] font-medium">{r.doc.title}</span>
                         {r.doc.external && (
-                          <ArrowUpRight size={11} aria-hidden className="shrink-0 text-faint" />
+                          <ArrowUpRight size={12} aria-hidden className="shrink-0 text-faint" />
                         )}
                       </span>
-                      <span className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted">
+                      <span className="mt-1 flex items-baseline gap-1.5 text-[11px]">
+                        <span className="shrink-0 font-mono tracking-[0.1em] uppercase text-accent">
+                          {kindLabels[r.doc.kind]}
+                        </span>
+                        <span className="truncate text-faint">{r.doc.meta}</span>
+                      </span>
+                      <span className="mt-1.5 line-clamp-2 text-[12.5px] leading-relaxed text-muted">
                         {r.doc.snippet}
                       </span>
                     </button>

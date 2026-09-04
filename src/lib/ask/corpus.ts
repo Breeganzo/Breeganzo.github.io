@@ -1,4 +1,10 @@
 import { certifications, degrees } from '../../content/credentials.ts'
+import {
+  CERTIFICATIONS_ANCHOR,
+  degreeAnchor,
+  roleAnchor,
+  skillAnchor,
+} from '../../content/anchors.ts'
 import { roles } from '../../content/experience.ts'
 import { profile } from '../../content/profile.ts'
 import { projects, statusLabels, trackLabels } from '../../content/projects.ts'
@@ -27,7 +33,11 @@ export interface Doc {
   meta: string
   /** Prose shown as the answer. Must stand alone — it is all a visitor reads. */
   snippet: string
-  /** Where "open" goes. Internal route, or an external URL for contact links. */
+  /**
+   * Where "open" goes. Points at the individual item, not the section it lives
+   * in: sending three different roles to the same `#experience` heading makes
+   * the visitor do the finding, which is the job they came here to delegate.
+   */
   href: string
   external?: boolean
   /** Indexed only, never displayed. */
@@ -73,7 +83,7 @@ export const docs: Doc[] = [
     title: `${r.title} — ${r.company}`,
     meta: `${r.start} – ${r.end} · ${r.location}`,
     snippet: r.bullets[0],
-    href: '/#experience',
+    href: `/#${roleAnchor(r.company, r.start)}`,
     // "Present" is how the role renders, but "current job" is how a visitor
     // asks for it, and no amount of query rewriting bridges a word the
     // document simply does not contain. The fact is already true of the data;
@@ -95,7 +105,7 @@ export const docs: Doc[] = [
     title: d.qualification,
     meta: `${d.institution} · ${d.start} – ${d.end}`,
     snippet: [d.detail, d.note].filter(Boolean).join('. ') || d.institution,
-    href: '/#background',
+    href: `/#${degreeAnchor(d.id)}`,
     text: [d.institution, d.qualification, d.detail ?? '', d.note ?? '', 'education degree university study'].join(' '),
   })),
 
@@ -107,7 +117,7 @@ export const docs: Doc[] = [
     snippet: certifications
       .map((c) => `${c.name}${c.inProgress ? ' (in progress)' : ''}`)
       .join(' · '),
-    href: '/#background',
+    href: `/#${CERTIFICATIONS_ANCHOR}`,
     text: ['certification certified credential', ...certifications.map((c) => `${c.name} ${c.issuer}`)].join(' '),
   },
 
@@ -117,7 +127,7 @@ export const docs: Doc[] = [
     title: g.name,
     meta: `${g.items.length} skills`,
     snippet: g.items.join(' · '),
-    href: '/#skills',
+    href: `/#${skillAnchor(g.name)}`,
     text: [g.name, g.items.join(' '), 'skill technology tool'].join(' '),
   })),
 
