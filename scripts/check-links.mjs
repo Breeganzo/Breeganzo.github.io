@@ -23,9 +23,12 @@ const results = await Promise.all(
       // GitHub returns 404 for private repos to unauthenticated clients, which
       // is exactly the signal we want — so do NOT send a token here.
       const res = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': 'link-check' } })
-      // LinkedIn answers automated clients with 999. It is an anti-bot code,
-      // not a broken link, so treat it as a pass.
-      const ok = res.ok || (res.status === 999 && url.includes('linkedin.com'))
+      // LinkedIn answers automated clients with 999, and 429 once it has seen a
+      // few. Both are anti-bot responses, not broken links. Treating 429 as a
+      // failure would make this gate flaky and eventually train us to ignore
+      // it — which defeats the point of gating the deploy on it at all.
+      const antiBot = res.status === 999 || res.status === 429
+      const ok = res.ok || (antiBot && url.includes('linkedin.com'))
       return { url, status: res.status, ok }
     } catch (err) {
       return { url, status: 0, ok: false, err: err.message }

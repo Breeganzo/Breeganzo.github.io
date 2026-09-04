@@ -17,9 +17,23 @@
       content="Production generative-AI systems: RAG pipeline design, multi-agent orchestration, and retrieval evaluation. Quantitative research alongside."
     />
     <meta property="og:url" content="https://breeganzo.github.io/" />
-    <meta property="og:image" content="https://breeganzo.github.io/profile.jpg" />
-    <meta property="og:image:alt" content="Anthony Breeganzo Thomas" />
-    <meta name="twitter:card" content="summary" />
+    <!--
+      og.jpg is a purpose-built 1200x630 card (source: scripts/og-card.html),
+      not the raw square portrait. A square image fed to a 1.91:1 slot gets
+      centre-cropped by LinkedIn and X, which decapitates the subject. The
+      explicit width/height let scrapers reserve the right box before the
+      image downloads, and summary_large_image is what actually renders the
+      wide card instead of a thumbnail.
+    -->
+    <meta property="og:image" content="https://breeganzo.github.io/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Anthony Breeganzo Thomas, AI Engineer at Kyndryl — RAG, multi-agent orchestration, retrieval evaluation"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://breeganzo.github.io/og.jpg" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/profile.jpg" />

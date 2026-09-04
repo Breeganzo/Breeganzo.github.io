@@ -1,0 +1,136 @@
+<!doctype html>
+<!--
+  Source for public/og.jpg — the 1200x630 social card used by og:image.
+  The square portrait alone gets centre-cropped by LinkedIn/X, which cuts the
+  head off. Rendered with the same tokens as the site so the card and the page
+  a visitor lands on look like the same product.
+
+  Everything is absolutely positioned on a fixed 1200x630 stage. Flexbox was
+  measurably unreliable here — the portrait shrank despite flex-shrink:0 — and
+  a social card is a fixed-size artefact anyway, so there is nothing for a
+  layout algorithm to solve.
+
+  Rebuild (manual, twice a year at most — not worth a build dependency):
+    1. Open this file in a headless Chrome and screenshot it. The browser
+       window is larger than the stage and its viewport cannot be resized
+       reliably, so the capture comes out oversized with the card pinned to
+       the top-left corner. Do not fight it; crop it.
+    2. Crop the top-left 2400x1260 (the stage at 2x) and downscale:
+
+         python3 -c "
+         from PIL import Image
+         s = Image.open('capture.png').convert('RGB')
+         s.crop((0,0,2400,1260)).resize((1200,630), Image.LANCZOS) \
+          .save('public/og.jpg','JPEG',quality=88,optimize=True,progressive=True)"
+
+    3. Confirm the result is exactly 1200x630 and that the face is in frame.
+       LinkedIn and X cache aggressively — reposting a bad card is expensive.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      /* overflow:hidden must be on BOTH. The aurora blobs sit at negative
+         offsets, and without it on <html> they enlarge the scrollable document
+         to ~1350x910 — which a full-page screenshot then captures instead of
+         the intended 1200x630 stage. */
+      html, body { width: 1200px; height: 630px; overflow: hidden; }
+
+      body {
+        position: relative;
+        background: #08090c;
+        color: #f4f6f9;
+        font-family: Inter, system-ui, sans-serif;
+        /* Ligatures off so any text scraped out of the image stays literal. */
+        font-variant-ligatures: none;
+        font-feature-settings: "liga" 0, "clig" 0;
+      }
+
+      /* Aurora, matching the site's Aurora.tsx blobs. */
+      .blob { position: absolute; border-radius: 50%; filter: blur(90px); }
+      .b1 { width: 620px; height: 620px; top: -250px; left: -170px;
+            background: radial-gradient(circle, rgba(110,168,255,.32), transparent 70%); }
+      .b2 { width: 560px; height: 560px; bottom: -280px; left: 260px;
+            background: radial-gradient(circle, rgba(138,180,255,.20), transparent 70%); }
+      .b3 { width: 540px; height: 540px; top: -170px; right: -150px;
+            background: radial-gradient(circle, rgba(88,140,230,.24), transparent 70%); }
+
+      .eyebrow {
+        position: absolute; top: 128px; left: 72px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 18px; letter-spacing: .16em; text-transform: uppercase;
+        color: #6ea8ff;
+      }
+
+      h1 {
+        position: absolute; top: 172px; left: 72px; width: 650px;
+        font-size: 58px; line-height: 1.07; font-weight: 700; letter-spacing: -.028em;
+      }
+
+      .grad {
+        background: linear-gradient(135deg, #6ea8ff, #8ab4ff);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+
+      .sub {
+        position: absolute; top: 340px; left: 72px; width: 620px;
+        font-size: 23px; line-height: 1.45; color: #a4aaba;
+      }
+
+      .tags {
+        position: absolute; top: 448px; left: 72px; width: 660px;
+        display: flex; flex-wrap: wrap; gap: 10px;
+      }
+      .tag {
+        font-size: 16px; font-weight: 500; color: #a4aaba;
+        padding: 8px 15px; border-radius: 999px;
+        background: rgba(255,255,255,.05);
+        border: 1px solid rgba(255,255,255,.10);
+      }
+
+      .portrait {
+        position: absolute; top: 82px; right: 72px;
+        width: 356px; height: 466px;
+        border-radius: 28px; overflow: hidden;
+        border: 1px solid rgba(255,255,255,.14);
+        box-shadow: 0 30px 70px -20px rgba(0,0,0,.85);
+      }
+      /* Subject stands centre-frame with his face high in a square source.
+         Cover into a 0.76 box crops width, so hold x centred and lift y. */
+      .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 16%; }
+
+      .url {
+        position: absolute; bottom: 44px; left: 72px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 18px; color: #737990;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+
+    <div class="eyebrow">AI Engineer &middot; Kyndryl</div>
+    <h1>Anthony Breeganzo <span class="grad">Thomas</span></h1>
+    <div class="sub">Production generative-AI systems,<br />and the evaluation that proves they work.</div>
+    <div class="tags">
+      <span class="tag">RAG</span>
+      <span class="tag">Multi-agent orchestration</span>
+      <span class="tag">Retrieval evaluation</span>
+      <span class="tag">Quant research</span>
+    </div>
+
+    <div class="portrait"><img src="../public/profile.jpg" alt="" /></div>
+
+    <div class="url">breeganzo.github.io</div>
+  </body>
+</html>
