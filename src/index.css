@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+
+/* Dark-first. One accent colour, no gradients. */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+:root {
+  --bg: #ffffff;
+  --bg-subtle: #f7f7f8;
+  --bg-raised: #ffffff;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --text: #18181b;
+  --text-muted: #52525b;
+  --text-faint: #8b8b93;
+  --accent: #1d63c9;
+  --accent-soft: #eaf1fd;
+}
+
+.dark {
+  --bg: #0b0c0e;
+  --bg-subtle: #121316;
+  --bg-raised: #16181c;
+  --border: #26282e;
+  --border-strong: #35383f;
+  --text: #f2f3f5;
+  --text-muted: #a1a4ad;
+  --text-faint: #70737c;
+  --accent: #6ea8ff;
+  --accent-soft: #14203a;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Visible focus for keyboard users, suppressed for mouse. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+@utility surface {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+}
+
+@utility prose-body {
+  color: var(--text-muted);
+  line-height: 1.75;
+}
