@@ -181,6 +181,11 @@ export const projects: Project[] = [
       'Power BI dashboard for model performance monitoring: AUC-ROC trends, feature drift, and default-rate segmentation by risk tier.',
       'Structured to simulate a production model-governance workflow, where explainability and drift monitoring are requirements rather than extras.',
     ],
+    body: [
+      'The model that wins on AUC is frequently the one you cannot ship. Credit decisioning is a regulated setting: an applicant is entitled to a reason for a refusal, so a model whose output cannot be attributed to specific features is not a candidate no matter how it scores. Gradient boosting with SHAP attribution was chosen on that basis — it is a deliberate accuracy-for-defensibility trade, not the best number I could find.',
+      'Drift monitoring is in the dashboard for the same reason. A credit model degrades quietly as the applicant population moves underneath it, and the failure is invisible in production until the defaults arrive months later. Watching feature distributions and default rate by risk tier is what turns that from a surprise into a scheduled review.',
+      'Scope note: this is a case study on a retail lending dataset, not a deployed bank model. The point of the exercise was the governance workflow around the model rather than the model itself.',
+    ],
   },
 
   {
@@ -200,6 +205,11 @@ export const projects: Project[] = [
       'Explainable AI throughout — in a clinical setting an unexplained recommendation is unusable regardless of accuracy.',
       'FHIR R4 compliant data handling, with documented NHS GDPR compliance.',
     ],
+    body: [
+      'The boundary this prototype is built around is that screening is not diagnosis. It surfaces patients whose presentation warrants a clinician looking sooner, and it stops there. Rheumatic and musculoskeletal disease is a domain where early detection changes outcomes materially, which makes a triage aid worth building — and also makes overreach genuinely harmful, so the system is not permitted to conclude anything.',
+      'Explainability is a hard requirement rather than a feature. A clinician cannot act on a recommendation they cannot interrogate, and would be professionally wrong to try, so an unexplained output has an effective accuracy of zero regardless of what it scores offline. The ReAct agent structure helps here: its intermediate reasoning steps are inspectable rather than hidden behind a single opaque call.',
+      'FHIR R4 and the GDPR documentation are load-bearing, not paperwork. Speaking a standard clinical data format is the difference between a demo and something that could sit next to an existing record system, and health data carries handling obligations that have to be designed in rather than added afterwards.',
+    ],
   },
 
   {
@@ -214,6 +224,11 @@ export const projects: Project[] = [
     highlights: [
       'Detects and automatically resolves recurring infrastructure conditions — disk exhaustion, stopped instances, downed services — before they become downtime.',
       'FastAPI service with auto-generated documentation, built in explicit phases with a stated goal per phase.',
+    ],
+    body: [
+      'Alerting hands a human a problem at three in the morning that a script could have solved. The conditions this targets — a disk filling, an instance stopped, a service down — are recurring, well understood, and have a known remedy, which is exactly the profile of work that should not require a person.',
+      'The corresponding risk is that automated remediation is a system with write access to production, so what it is allowed to touch matters more than how clever it is. Restricting it to a small set of understood conditions with bounded blast radius is the design, not a limitation of it: an automation that occasionally takes a creative action is worse than no automation, because it removes the operator’s ability to predict the state of the estate.',
+      'Still in development, and built in explicit phases with a stated goal for each so that partial progress is usable rather than a half-finished whole.',
     ],
   },
 
@@ -230,6 +245,11 @@ export const projects: Project[] = [
       'Generates enterprise AWS landing-zone recommendations tailored to stated business, compliance and security requirements.',
       'Produces architecture diagrams and written documentation alongside the recommendation, which is the part that makes it usable in a real consulting conversation.',
     ],
+    body: [
+      'Landing-zone design is much less a technical problem than a constraint-satisfaction one. The account topology, guardrails and network layout fall out of things like which regulator applies, how the organisation is structured, and who is allowed to approve spend. That shape — elicit constraints in natural language, then map them onto a known set of patterns — is a reasonable fit for a language model, whereas asking one to invent novel infrastructure would not be.',
+      'It stops at a recommendation and deliberately does not apply anything. There is no generated Terraform being run against an account: the output is an architecture and the written reasoning behind it, for a human to argue with. Given that a landing zone is the foundation every later workload inherits, a wrong decision applied automatically is expensive in a way that a wrong decision on paper is not.',
+      'The diagrams and documentation are the actual deliverable. In a consulting conversation the artefact that gets circulated and challenged is a document, so a tool that produces only a chat answer would not survive contact with the process.',
+    ],
   },
 
   {
@@ -245,6 +265,11 @@ export const projects: Project[] = [
       'AI conversation partner with voice interaction and pronunciation coaching.',
       'A structured nine-month curriculum from A0 to B2, rather than open-ended chat practice.',
       'Built as a free product.',
+    ],
+    body: [
+      'Open-ended conversation with a language model is a poor way to learn a language, which is the thing this is built against. Left unstructured, a learner converses comfortably within the vocabulary they already have and plateaus, because nothing forces them into the constructions they are avoiding. The A0-to-B2 curriculum exists to supply that pressure — the model is a practice partner inside a syllabus rather than a substitute for one.',
+      'Voice is the reason the project is worth building at all. Reading and writing French are well served by existing tools; speaking it badly to something that will not judge you is the part learners cannot easily get, and pronunciation feedback needs audio in the loop rather than text.',
+      'Free by design. A paid tier would push the product towards engagement metrics, and time-on-app is directly opposed to the goal, which is that the user eventually does not need it.',
     ],
   },
 
@@ -273,6 +298,11 @@ export const projects: Project[] = [
       'UPI payments via QR code and deep link, avoiding payment-gateway fees entirely.',
       'Firebase authentication and Firestore on the free tier, deployed to GitHub Pages with CI — chosen so the running cost is genuinely zero.',
     ],
+    body: [
+      'Zero running cost was the requirement the architecture was chosen to satisfy, not a happy consequence of it. The users are life-science students, the transaction sizes are small, and a platform that needs revenue to stay switched on dies during the first quiet month. Firestore and Firebase Auth on the free tier with a static front end on GitHub Pages means there is no monthly bill that can go unpaid.',
+      'UPI by QR code and deep link follows from the same constraint. A conventional payment gateway takes a percentage and a fixed fee per transaction, which is material on a low-value sale, and it introduces onboarding and settlement obligations. Handing over a UPI intent moves the payment rail outside the platform entirely.',
+      'Locking a topic once purchased is the product rather than a feature of it. What a student is buying is that nobody else in their cohort is now working on the same research question, so exclusivity is the thing with the value — which is why it is enforced in data rather than by convention.',
+    ],
   },
 ]
 
@@ -282,6 +312,22 @@ export const byTrack = (track: Track | 'all') =>
   track === 'all' ? projects : projects.filter((p) => p.track === track)
 
 export const findProject = (slug: string) => projects.find((p) => p.slug === slug)
+
+/**
+ * Previous/next within the same track, wrapping at the ends.
+ * Same-track rather than global order: someone reading the quant work is far
+ * more likely to want the next quant project than whatever happens to sit
+ * beside it in the array.
+ */
+export const adjacentProjects = (slug: string) => {
+  const siblings = projects.filter((p) => p.track === findProject(slug)?.track)
+  const i = siblings.findIndex((p) => p.slug === slug)
+  if (i === -1 || siblings.length < 2) return { prev: undefined, next: undefined }
+  return {
+    prev: siblings[(i - 1 + siblings.length) % siblings.length],
+    next: siblings[(i + 1) % siblings.length],
+  }
+}
 
 export const trackLabels: Record<Track, string> = {
   ai: 'GenAI & Agents',

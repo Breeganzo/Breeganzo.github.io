@@ -256,6 +256,24 @@ body {
   }
 }
 
+/* Ask dialog entrance. Short and small-travel: this opens on a keystroke, so
+   anything longer than ~150ms reads as lag rather than polish. Neutralised by
+   the reduced-motion block below. */
+@keyframes ask-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.ask-in {
+  animation: ask-in 140ms var(--ease) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -44,6 +44,12 @@ jobs:
       - name: Link check
         run: npm run checklinks
 
+      # The Ask panel is a retrieval system on a page that claims retrieval
+      # evaluation as a specialism. Shipping it unmeasured would undercut the
+      # claim, so recall@3 is gated here.
+      - name: Retrieval eval
+        run: npm run eval:retrieval
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist

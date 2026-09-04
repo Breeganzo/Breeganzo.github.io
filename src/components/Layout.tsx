@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Github, Linkedin, Mail, Menu, X } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
+import Ask from './Ask'
 import Aurora from './Aurora'
 import { profile } from '../content/profile'
 
@@ -89,6 +90,8 @@ function Nav() {
           <nav aria-label="Main" className="hidden items-center gap-1 sm:flex">
             <NavItems />
           </nav>
+
+          <Ask />
 
           <ThemeToggle />
 

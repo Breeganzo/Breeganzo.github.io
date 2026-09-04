@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "checklinks": "node scripts/check-links.mjs",
-    "audit:content": "node scripts/audit-content.mjs"
+    "audit:content": "node scripts/audit-content.mjs",
+    "eval:retrieval": "node scripts/eval-retrieval.mjs"
   },
   "dependencies": {
     "react": "^19.1.1",
