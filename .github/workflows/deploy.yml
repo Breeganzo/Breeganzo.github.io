@@ -38,6 +38,12 @@ jobs:
       - name: Content audit
         run: npm run audit:content
 
+      # A 404 here means a linked repository went private again. That is a
+      # broken promise on a public CV, so it fails the deploy rather than
+      # shipping a dead link.
+      - name: Link check
+        run: npm run checklinks
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

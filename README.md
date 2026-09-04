@@ -41,15 +41,12 @@ so the gap reads as a decision rather than an omission.
 
 ## Release gates
 
+Both run in CI and fail the deploy.
+
 ```bash
 npm run audit:content   # withheld / confidential content, outdated title, retired domain
 npm run checklinks      # every external URL resolves
 ```
-
-`audit:content` runs in CI and fails the deploy. `checklinks` is deliberately **not**
-in CI yet: three linked repositories are still private, so it fails on 404s that are
-expected rather than wrong. Wire it into `.github/workflows/deploy.yml` once those
-repos are public.
 
 `audit:content` scans `dist/` and any PDF in `public/` (needs `pdftotext`). It has a
 short allowlist for documented false positives — each entry carries a reason, and it
@@ -57,6 +54,13 @@ is not for silencing real hits.
 
 `checklinks` deliberately sends no auth token, because a 404 from GitHub is exactly
 the signal that a linked repository is still private.
+
+## Repository metadata
+
+`scripts/curate-repos.sh` sets the description, homepage and topics on every
+repository the site links to, using the taglines from `projects.ts` as the source.
+It is idempotent, so GitHub and the site cannot drift apart. Re-run it after editing
+a tagline.
 
 ## Known blockers
 
@@ -79,8 +83,6 @@ confirm `npm run audit:content` still passes.
 
 Other, non-blocking:
 
-- Three linked repositories are still private, so those links 404 until they are
-  made public: `AlphaFlow`, `AWS_LZ_AGENT`, `french-on-the-fly`.
 - `RMD_Agent_Demo`'s live demo link is omitted — the Streamlit app now redirects to
   a login page.
 - `Veloryn` is commented out in `projects.ts`; `veloryn.dev` fails TLS and serves
